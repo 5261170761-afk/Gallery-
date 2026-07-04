@@ -1,0 +1,6 @@
+{
+  "name": "Media Showcase",
+  "description": "A beautifully crafted personal media gallery to showcase, upload, and organize photos and videos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

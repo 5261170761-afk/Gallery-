@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helpers
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidMediaItem(data) {
+      return data.keys().hasAll(['id', 'type', 'src', 'title', 'description', 'tags', 'category', 'dateAdded', 'isFavorite'])
+        && data.keys().size() >= 9
+        && data.id is string && data.id.size() <= 128
+        && data.type is string && (data.type == 'image' || data.type == 'video')
+        && data.src is string && data.src.size() <= 2048
+        && data.title is string && data.title.size() <= 200
+        && data.description is string && data.description.size() <= 2000
+        && data.tags is list && data.tags.size() <= 50
+        && data.category is string && data.category.size() <= 100
+        && data.dateAdded is string && data.dateAdded.size() <= 100
+        && data.isFavorite is bool;
+    }
+
+    // Media Collection Rules
+    match /media/{mediaId} {
+      allow read: if true;
+      allow create: if isValidId(mediaId) && isValidMediaItem(incoming());
+      allow update: if isValidId(mediaId) && isValidMediaItem(incoming());
+      allow delete: if isValidId(mediaId);
+    }
+  }
+}

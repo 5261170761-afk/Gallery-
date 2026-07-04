@@ -1,0 +1,27 @@
+{
+  "entities": {
+    "MediaItem": {
+      "title": "MediaItem",
+      "description": "An item uploaded to the showcase.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["image", "video"] },
+        "src": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "tags": { "type": "array" },
+        "category": { "type": "string" },
+        "dateAdded": { "type": "string" },
+        "isFavorite": { "type": "boolean" }
+      },
+      "required": ["id", "type", "src", "title", "description", "tags", "category", "dateAdded", "isFavorite"]
+    }
+  },
+  "firestore": {
+    "/media/{mediaId}": {
+      "schema": "MediaItem",
+      "description": "Shared media uploads accessible by all users"
+    }
+  }
+}
